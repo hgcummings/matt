@@ -1,9 +1,44 @@
-define(['lodash'], function(_) {
-    var width = 18;
-    var height = 18;
+define(['models/geometry', 'models/movement'], function(geometry, movement) {
+    var width = 19;
+    var height = 19;
     
-    function generatePillars() {        
+    function generatePillars() {
         var pillars = [];
+        
+        function Pillar(x, y, wallDirections) {
+            this.x = x;
+            this.y = y;
+            this.wallDirections = wallDirections;
+            this.recalculateWalls();
+        }
+        
+        Pillar.prototype.recalculateWalls = function() {
+            this.walls = this.wallDirections.map(function(wallDirection) {
+                var angle = wallDirection * Math.PI / 2;
+                return [this.x + Math.sin(angle), this.y - Math.cos(angle)];
+            }.bind(this))
+        }
+        
+        Pillar.prototype.rotate = function(direction, duration) {
+            this.rotationDuration = duration;
+            this.targetWallDirections = this.wallDirections.map(function(wallDirection) {
+                return wallDirection + direction;
+            });
+        }
+        
+        Pillar.prototype.update = function(dt) {
+            this.wallDirections = this.wallDirections.map(function(wallDirection, index) {
+                return movement.tween(
+                    wallDirection, this.targetWallDirections[index], dt / this.rotationDuration);
+            }.bind(this))
+            this.recalculateWalls();
+            if (this.wallDirections[0] === this.targetWallDirections[0]) {
+                delete this.rotationDuration;
+                delete this.targetWallDirections;
+                return false;
+            }
+            return true;
+        }
         
         for (var i = 1; i < width; i += 1) {
             for (var j = 1; j < width; j += 1) {
@@ -17,11 +52,7 @@ define(['lodash'], function(_) {
                     }
                 }
                 if (walls.length) {
-                    pillars.push({
-                        x: i,
-                        y: j,
-                        walls: walls
-                    });
+                    pillars.push(new Pillar(i, j, walls));
                 }
             }
         }
@@ -32,13 +63,28 @@ define(['lodash'], function(_) {
     return {
         init: function() {
             var pillars = generatePillars();
-            
-            var update = function() {
-                
+            var activePillar;
+            var update = function(dt) {
+                if (activePillar) {
+                    activePillar = activePillar.update(dt) ? activePillar : null;
+                }
+                return state;
             }
             
-            var notifyPlayerMove = function() {
-                
+            var notifyPlayerMove = function(start, end, duration) {
+                for (var i = 0; i < pillars.length; ++i) {
+                    var pillar = pillars[i];
+                    for (var j = 0; j < pillar.walls.length; ++j) {
+                        var direction = geometry.crosses([start, end], [[pillar.x, pillar.y], pillar.walls[j]]);
+                        if (direction) {
+                            break;
+                        }
+                    }
+                    if (direction) {
+                        activePillar = pillar;
+                        pillar.rotate(direction, duration);
+                    }
+                }
             }
             
             var state = {

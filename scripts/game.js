@@ -20,6 +20,7 @@ define(['models/grid', 'models/minotaur', 'views/grid', 'views/minotaur', 'views
                     var newTime = new Date().getTime();
                     var dt = newTime - gameTime;
                     gameTime = newTime;
+                    grid = grid.update(dt);
                     minotaur = minotaur.update(dt);
                     
                     gridView.draw(context, grid);
