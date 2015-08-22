@@ -65,29 +65,29 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
     }
     
     return {
-        init: function() {
+        init: function(environment) {
             var pillars = generatePillars();
+            environment.registerObstructions(pillars);
             var activePillar;
             var update = function(dt) {
                 if (activePillar) {
                     activePillar = activePillar.update(dt) ? activePillar : null;
+                    if (!activePillar) {
+                        environment.registerObstructions(pillars);
+                    }
                 }
             }
             
             var notifyPlayerMove = function(start, end, duration) {
-                for (var i = 0; i < pillars.length; ++i) {
-                    var pillar = pillars[i];
-                    for (var j = 0; j < pillar.walls.length; ++j) {
-                        var direction = geometry.crosses([start, end], [[pillar.x, pillar.y], pillar.walls[j]]);
-                        if (direction) {
-                            break;
-                        }
-                    }
-                    if (direction) {
-                        activePillar = pillar;
-                        pillar.rotate(direction, duration);
-                    }
+                var obstruction = geometry.findObstruction(pillars, start, end);
+                if (obstruction) {
+                    activePillar = obstruction.pillar;
+                    activePillar.rotate(obstruction.direction, duration);
                 }
+            }
+            
+            var isValidPosition = function(pos) {
+                return pos[0] > 0 && pos[0] < state.width && pos[1] > 0 && pos[1] < state.height; 
             }
             
             var state = {
@@ -95,7 +95,8 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
                 width: width,
                 height: height,
                 pillars: pillars,
-                notifyPlayerMove: notifyPlayerMove 
+                notifyPlayerMove: notifyPlayerMove,
+                isValidPosition: isValidPosition
             };
             
             return state;

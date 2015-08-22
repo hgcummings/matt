@@ -1,21 +1,20 @@
-define(['models/grid', 'models/minotaur', 'models/theseus',
-    'views/grid', 'views/minotaur', 'views/theseus', 'views/globals'],
-    function(gridModel, minotaurModel, theseusModel, gridView, minotaurView, theseusView, viewGlobals) {
+define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment',
+    'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals'],
+    function(gridModel, minotaurModel, theseusModel, environmentModel, 
+        gridView, minotaurView, theseusView, environmentView, viewGlobals) {
         return {
             init: function() {
+                var environment = environmentModel.init();
+                var grid = gridModel.init(environment);
+                var minotaur = minotaurModel.init(grid, environment);
+                var theseus = theseusModel.init(grid, environment);
+
                 var container = document.getElementById('game');
                 var canvas = document.createElement('canvas');
-                
-                var grid = gridModel.init();
                 canvas.width = viewGlobals.scale * grid.width;
                 canvas.height = viewGlobals.scale * grid.height;
-                
                 var context = canvas.getContext('2d');
-    
                 container.appendChild(canvas);
-                
-                var minotaur = minotaurModel.init(grid);
-                var theseus = theseusModel.init(grid);
                 
                 var gameTime = new Date().getTime();
                 var animate = function() {
@@ -25,8 +24,10 @@ define(['models/grid', 'models/minotaur', 'models/theseus',
                     grid.update(dt);
                     minotaur.update(dt);
                     theseus.update(dt);
-                    
-                    gridView.draw(context, grid);
+                    environment.update(dt);
+
+                    gridView.draw(context, grid);                    
+                    environmentView.draw(context, environment);
                     minotaurView.draw(context, minotaur);
                     theseusView.draw(context, theseus);
                     
