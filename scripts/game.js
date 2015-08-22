@@ -1,5 +1,6 @@
-define(['models/grid', 'models/minotaur', 'views/grid', 'views/minotaur', 'views/globals'],
-    function(gridModel, minotaurModel, gridView, minotaurView, viewGlobals) {
+define(['models/grid', 'models/minotaur', 'models/theseus',
+    'views/grid', 'views/minotaur', 'views/theseus', 'views/globals'],
+    function(gridModel, minotaurModel, theseusModel, gridView, minotaurView, theseusView, viewGlobals) {
         return {
             init: function() {
                 var container = document.getElementById('game');
@@ -14,17 +15,20 @@ define(['models/grid', 'models/minotaur', 'views/grid', 'views/minotaur', 'views
                 container.appendChild(canvas);
                 
                 var minotaur = minotaurModel.init(grid);
+                var theseus = theseusModel.init(grid);
                 
                 var gameTime = new Date().getTime();
                 var animate = function() {
                     var newTime = new Date().getTime();
                     var dt = newTime - gameTime;
                     gameTime = newTime;
-                    grid = grid.update(dt);
-                    minotaur = minotaur.update(dt);
+                    grid.update(dt);
+                    minotaur.update(dt);
+                    theseus.update(dt);
                     
                     gridView.draw(context, grid);
                     minotaurView.draw(context, minotaur);
+                    theseusView.draw(context, theseus);
                     
                     window.requestAnimationFrame(animate);
                 };

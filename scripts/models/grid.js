@@ -13,9 +13,13 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
         }
         
         Pillar.prototype.recalculateWalls = function() {
+            var round = function(value) {
+                return Math.round(value * 1000) / 1000;
+            }
+            
             this.walls = this.wallDirections.map(function(wallDirection) {
                 var angle = wallDirection * Math.PI / 2;
-                return [this.x + Math.sin(angle), this.y - Math.cos(angle)];
+                return [this.x + round(Math.sin(angle)), this.y - round(Math.cos(angle))];
             }.bind(this))
         }
         
@@ -68,7 +72,6 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
                 if (activePillar) {
                     activePillar = activePillar.update(dt) ? activePillar : null;
                 }
-                return state;
             }
             
             var notifyPlayerMove = function(start, end, duration) {
