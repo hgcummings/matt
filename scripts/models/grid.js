@@ -2,41 +2,26 @@ define(['lodash'], function(_) {
     var width = 18;
     var height = 18;
     
-    function generatePillars() {
-        var getWall = function() {
-            return Math.max(0, Math.floor(Math.random() * 4) - 1);
-        }
-        
+    function generatePillars() {        
         var pillars = [];
         
-        var addWallToPillar = function(x, y, d) {
-            var existingPillar = _.find(pillars, function(pillar) {
-                return pillar.x === x && pillar.y === y;
-            });
-            if (existingPillar) {
-                existingPillar.walls.push(d);
-            } else {
-                pillars.push({
-                    x: x,
-                    y: y,
-                    walls: [d]
-                });
-            }
-        }
-        
-        for (var i = 0; i < width; ++i) {
-            for (var j = 0; j < height; ++j) {
-                if (i > 0) {
-                    var vertical = getWall();
-                    if (vertical) {
-                        addWallToPillar(i, j + vertical - 1, (2 - vertical) * 2);
+        for (var i = 1; i < width; i += 1) {
+            for (var j = 1; j < width; j += 1) {
+                if (i % 2 !== j % 2) {
+                    continue;
+                }
+                var walls = [];
+                for (var k = 0; k < 4; ++k) {
+                    if (Math.random() > 0.5) {
+                        walls.push(k);
                     }
                 }
-                if (j > 0) {
-                    var horizontal = getWall();
-                    if (horizontal) {
-                        addWallToPillar(i + horizontal - 1, j, (2 * horizontal) - 1);
-                    }
+                if (walls.length) {
+                    pillars.push({
+                        x: i,
+                        y: j,
+                        walls: walls
+                    });
                 }
             }
         }
@@ -48,11 +33,23 @@ define(['lodash'], function(_) {
         init: function() {
             var pillars = generatePillars();
             
-            return {
+            var update = function() {
+                
+            }
+            
+            var notifyPlayerMove = function() {
+                
+            }
+            
+            var state = {
+                update: update,
                 width: width,
                 height: height,
-                pillars: pillars
-            }
+                pillars: pillars,
+                notifyPlayerMove: notifyPlayerMove 
+            };
+            
+            return state;
         }
     }
 })

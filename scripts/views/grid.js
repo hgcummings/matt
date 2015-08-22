@@ -32,8 +32,6 @@ define(['views/globals'], function(viewGlobals) {
                 context.stroke();
                 context.closePath();
             }
-            
-
         }
     }
 });
