@@ -32,7 +32,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     result.innerText = resultText;
                 }
                 
-                hintView.setText("Theseus is coming for you. Better run! Use arrow keys or W,A,S,D to move...");
+                hintView.setText('Theseus is coming for you. Better run! Use arrow keys or W,A,S,D to move...');
                 var animate = function() {
                     var newTime = new Date().getTime();
                     var dt = newTime - gameTime;
@@ -48,10 +48,12 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                         } else {
                             endGame('alert-success', 'The hunter becomes the hunted. You defeated Theseus!');
                         }
-                    } else if (theseus.light <= 0 &&
-                      theseus.x === environment.lightSources[0].x &&
-                      theseus.y - 0.5 === environment.lightSources[0].y) {
-                        endGame('alert-warning', 'You evaded Theseus, but he escaped to fight another day.')
+                    } else if (theseus.light <= 0) {
+                        hintView.setText('Theseus is defenseless in the dark. Can you prevent him from escaping?');
+                        if (theseus.x === environment.lightSources[0].x &&
+                          theseus.y - 0.5 === environment.lightSources[0].y) {
+                            endGame('alert-warning', 'You evaded Theseus, but he escaped to fight another day.')
+                        }
                     }
 
                     gridView.draw(context, grid);
