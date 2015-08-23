@@ -67,6 +67,7 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
         init: function(difficulty, environment) {
             var pillars = generatePillars(difficulty.mazeDensity);
             environment.registerObstructions(pillars);
+            environment.createLightSource(width / 2, 0);
             var activePillars = [];
             var update = function(dt) {
                 for (var i = activePillars.length - 1; i >= 0; --i) {

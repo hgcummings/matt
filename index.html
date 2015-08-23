@@ -4,18 +4,25 @@
         <title>Minotaur and the Theseus</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/darkly/bootstrap.min.css"/>
         <script data-main="scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.min.js"></script>
+        <style>
+            body {
+                text-align: center;
+            }
+        </style>
     </head>
     <body>
         <div class="container">
-        <h1>Minotaur and the Theseus</h1>
-        <div id="game"></div>
-        <div class="menu">
-            <h2>Play again? Choose difficultly:</h2>
-            <a class="btn btn-success">Easy</a>
-            <a class="btn btn-info">Tricksy</a>
-            <a class="btn btn-warning">Fiendish</a>
-            <a class="btn btn-danger">Monstrous</a>
-        </div>
+            <h1>Minotaur and the Theseus</h1>
+            <div id="game"></div>
+            <div id="menu" style="display: none">
+                <h3>Play again? Choose difficulty:</h3>
+                <p>
+                    <a class="btn btn-success">Easy</a>
+                    <a class="btn btn-info">Tricksy</a>
+                    <a class="btn btn-warning">Fiendish</a>
+                    <a class="btn btn-danger">Monstrous</a>
+                </p>
+            </div>
         </div>
     </body>
 </html>
