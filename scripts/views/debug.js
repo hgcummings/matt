@@ -26,12 +26,26 @@ define(['views/globals'], function(viewGlobals) {
 
                     }
                 }
-                
             };
             
             if (window.DEBUG_BLOCKED_PATHS) {
                 drawPaths(window.DEBUG_BLOCKED_PATHS.NS, [0, 1]);
                 drawPaths(window.DEBUG_BLOCKED_PATHS.WE, [1, 0]);
+            }
+            
+            if (window.DEBUG_FOUND_PATH) {
+                for (var i = 0; i < window.DEBUG_FOUND_PATH.length - 1; ++i) {
+                    var start = window.DEBUG_FOUND_PATH[i];
+                    var end = window.DEBUG_FOUND_PATH[i + 1];
+                    context.globalAlpha = 0.5;
+                    context.strokeStyle = '#fff'
+                    context.beginPath();
+                    context.moveTo((start[0] + 0.5) * viewGlobals.scale, (start[1] + 0.5) * viewGlobals.scale);
+                    context.lineTo((end[0] + 0.5) * viewGlobals.scale, (end[0] + 0.5) * viewGlobals.scale);
+                    context.stroke();
+                    context.closePath();
+                    context.restore();
+                }
             }
         }
     };

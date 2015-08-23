@@ -1,6 +1,6 @@
-define(['input', 'models/movement', 'models/paths'], function(input, movement, pathsModel) {
+define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, movement, pathsModel, _) {
     'use strict';
-    //var target = null;
+    var target = null;
     var movingTo = null;
     var obstructed = false;
     
@@ -27,8 +27,33 @@ define(['input', 'models/movement', 'models/paths'], function(input, movement, p
             var speed = function() {
                 return obstructed ? difficulty.theseusWallMoveSpeed : difficulty.theseusSpeed;
             };
+
+            var chooseNewTarget = function() {
+                var max = 0;
+                var maxTargets = [];
+                
+                for (var i = 0; i < grid.width; ++i) {
+                    for (var j = 0; j < grid.width; ++j) {
+                        var value = enemyP[i][j];
+                        if (value > max) {
+                            max = value;
+                            maxTargets = [];
+                        }
+                        if (value === max) {
+                            maxTargets.push([i, j]);
+                        }
+                    }
+                }
+                
+                if (maxTargets.length === 1) {
+                    return maxTargets[0];
+                } else {
+                    return _.sample(maxTargets);
+                }
+            }
             
             state.update = function(dt) {
+                paths.update(lightSource, dt);
                 if (movingTo) {
                     state.x = movement.tween(state.x, movingTo[0], dt * speed());
                     state.y = movement.tween(state.y, movingTo[1], dt * speed());
@@ -37,16 +62,15 @@ define(['input', 'models/movement', 'models/paths'], function(input, movement, p
                         movingTo = null;
                     }
                 } else {
-                    var direction = Math.floor(Math.random() * 4);
-                    var move = movement.directionVector(direction);
-                    var moveTo = [state.x + move[0], state.y + move[1]];
-                    if (grid.isValidPosition(moveTo)) {
+                    if (!target) {
+                        target = chooseNewTarget();
+                    }
+                    movingTo = paths.moveTo(target, [state.x, state.y]);
+                    if (movingTo) {
                         obstructed = !!grid.notifyPlayerMove(
-                            [state.x, state.y], moveTo, 1 /  difficulty.theseusWallMoveSpeed);
-                        movingTo = moveTo;
+                            [state.x, state.y], movingTo, 1 / difficulty.theseusWallMoveSpeed);
                     }
                 }
-                paths.update(lightSource, dt);
             };
             return state;
         }
