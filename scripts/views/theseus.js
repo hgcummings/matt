@@ -5,8 +5,8 @@ define(['views/globals'], function(viewGlobals) {
             
             context.beginPath();
             context.arc(
-                viewGlobals.scale * (model.x),
-                viewGlobals.scale * (model.y),
+                viewGlobals.scale * model.x,
+                viewGlobals.scale * model.y,
                 viewGlobals.scale / 4,
                 0, Math.PI * 2, false);
             context.fill();

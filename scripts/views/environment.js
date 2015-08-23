@@ -14,6 +14,23 @@ define(['views/globals'], function(viewGlobals) {
                         viewGlobals.scale);
                     context.restore();
                 }
+                
+                var drawPaths = function(paths, colour) {
+                    for (var j = 0; j < paths.length; ++j) {
+                        var path = paths[j];
+                        context.strokeStyle = colour;
+                        context.beginPath();
+                        context.moveTo(path[0][0] * viewGlobals.scale, path[0][1] * viewGlobals.scale);
+                        context.lineTo(path[1][0] * viewGlobals.scale, path[1][1] * viewGlobals.scale);
+                        context.stroke();
+                        context.closePath();
+                    }
+                }
+                
+                if (window.DEBUG_ENABLED) {
+                    drawPaths(model.lightSources[i].blockedPaths, '#f00');
+                    drawPaths(model.lightSources[i].clearPaths, '#0f0');
+                }
             }
             
             for (var i = 0; i < model.soundSources.length; ++i) {

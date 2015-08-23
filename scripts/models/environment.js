@@ -16,8 +16,9 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
             LightSource.prototype.updatePosition = function(x, y) {
                 this.x = x;
                 this.y = y;
-                this.lightCells = [];
-                this.lightCells.push({x: this.x, y: this.y, lum: 1});
+                this.lightCells = [{x: this.x, y: this.y, lum: 1}];
+                this.blockedPaths = [];
+                this.clearPaths = [];
                 
                 for (var lum = 0.75; lum > 0; lum -= 0.25) {
                     var currentCells = this.lightCells.length;
@@ -26,9 +27,13 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                         for (var d = 0; d < 4; ++d) {
                             var move = movement.directionVector(d);
                             var newPosition = [cell.x + move[0], cell.y + move[1]];
-                            if (!this.illuminatesPosition(newPosition[0], newPosition[1]) &&
-                                 !geometry.findObstruction(obstructions, [cell.x, cell.y], newPosition)) {
-                                this.lightCells.push({x: newPosition[0], y: newPosition[1], lum: lum});
+                            if (geometry.findObstruction(obstructions, [cell.x, cell.y], newPosition)) {
+                                this.blockedPaths.push([[cell.x, cell.y], newPosition]);
+                            } else {
+                                this.clearPaths.push([[cell.x, cell.y], newPosition]);
+                                if (!this.illuminatesPosition(newPosition[0], newPosition[1])) {
+                                    this.lightCells.push({x: newPosition[0], y: newPosition[1], lum: lum});
+                                }
                             }
                         }
                     }

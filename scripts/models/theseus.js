@@ -2,9 +2,25 @@ define(['input', 'models/movement'], function(input, movement) {
     var target = null;
     var movingTo = null;
     var obstructed = false;
+    
+    var blockNsP = []; // Confidence that a North-Source path is blocked
+    var blockWeP = []; // Confidence that an East-West path is blocked
+    var enemyP = []; // Confidence of the location of the enemy
 
     return {
         init: function(difficulty, grid, environment) {
+            for (var i = 0; i < grid.width; ++i) {
+                blockNsP[i] = [];
+                blockWeP[i] = [];
+                enemyP[i] = [];
+                for (var j = 0; j < grid.width; ++j) {
+                    blockNsP[i][j] = 0;
+                    blockWeP[i][j] = 0;
+                    enemyP[i][j] = 0;
+                }
+            }
+            enemyP[Math.floor(grid.width / 2)][Math.floor(grid.height / 2)] = 1;
+            
             var state = {
                 x: grid.width / 2,
                 y: 0.5
