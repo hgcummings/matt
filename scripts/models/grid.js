@@ -1,4 +1,5 @@
 define(['models/geometry', 'models/movement'], function(geometry, movement) {
+    'use strict';
     var width = 19;
     var height = 19;
     
@@ -15,26 +16,26 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
         Pillar.prototype.recalculateWalls = function() {
             var round = function(value) {
                 return Math.round(value * 1000) / 1000;
-            }
+            };
             
             this.walls = this.wallDirections.map(function(wallDirection) {
                 var angle = wallDirection * Math.PI / 2;
                 return [this.x + round(Math.sin(angle)), this.y - round(Math.cos(angle))];
-            }.bind(this))
-        }
+            }.bind(this));
+        };
         
         Pillar.prototype.rotate = function(direction, duration) {
             this.rotationDuration = duration;
             this.targetWallDirections = this.wallDirections.map(function(wallDirection) {
                 return wallDirection + direction;
             });
-        }
+        };
         
         Pillar.prototype.update = function(dt) {
             this.wallDirections = this.wallDirections.map(function(wallDirection, index) {
                 return movement.tween(
                     wallDirection, this.targetWallDirections[index], dt / this.rotationDuration);
-            }.bind(this))
+            }.bind(this));
             this.recalculateWalls();
             if (this.wallDirections[0] === this.targetWallDirections[0]) {
                 delete this.rotationDuration;
@@ -42,7 +43,7 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
                 return false;
             }
             return true;
-        }
+        };
         
         for (var i = 1; i < width; i += 1) {
             for (var j = 1; j < width; j += 1) {
@@ -78,7 +79,7 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
                         activePillars.splice(i, 1);
                     }
                 }
-            }
+            };
             
             var notifyPlayerMove = function(start, end, duration) {
                 var obstruction = geometry.findObstruction(pillars, start, end);
@@ -88,11 +89,11 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
                     return obstruction.pillar;
                 }
                 return null;
-            }
+            };
             
             var isValidPosition = function(pos) {
                 return pos[0] > 0 && pos[0] < state.width && pos[1] > 0 && pos[1] < state.height; 
-            }
+            };
             
             var state = {
                 update: update,
@@ -105,5 +106,5 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
             
             return state;
         }
-    }
-})
+    };
+});

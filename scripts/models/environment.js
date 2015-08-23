@@ -1,11 +1,12 @@
 define(['models/movement', 'models/geometry'], function(movement, geometry) {
+    'use strict';
     return {        
         init: function() {
             var state = {
                 lightSources: [],
                 soundSources: [],
                 soundListeners: []
-            }
+            };
             var obstructions = [];
             
             function LightSource(x, y) {
@@ -38,7 +39,7 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                         }
                     }
                 }
-            }
+            };
             
             LightSource.prototype.illuminatesPosition = function(x, y) {
                 for (var i = 0; i < this.lightCells.length; ++i) {
@@ -48,7 +49,7 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                     }
                 }
                 return false;
-            }
+            };
             
             LightSource.prototype.notify = function(x, y) {
                 if (this.illuminatesPosition(x, y)) {
@@ -56,13 +57,13 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                         this.watchers[i].notify(x, y);
                     }
                 }
-            }
+            };
             
             LightSource.prototype.watch = function(callback) {
                 this.watchers.push(callback);
-            }
+            };
             
-            var speedOfSound = 0.1; // Squares per millisecond
+            var speedOfSound = 0.01; // Squares per millisecond
             
             function SoundSource(x, y, v) {
                 this.x = x;
@@ -72,7 +73,7 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
             }
             
             SoundSource.prototype.update = function(dt) {
-                var newR = Math.min(this.v, this.r + speedOfSound);
+                var newR = Math.min(this.v, this.r + speedOfSound * dt);
                 for (var i = 0; i < state.soundListeners.length; ++i) {
                     var listener = state.soundListeners[i];
                     var distanceSquared = (
@@ -83,11 +84,11 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                     }
                 }
                 this.r = newR;
-            }
+            };
             
             SoundSource.prototype.active = function() {
                 return this.r < this.v;
-            }
+            };
             
             function SoundListener(x, y, callback) {
                 this.updatePosition(x, y);
@@ -98,11 +99,11 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
             SoundListener.prototype.updatePosition = function (x, y) {
                 this.x = x;
                 this.y = y;
-            }
+            };
             
             SoundListener.prototype.notify = function(sourceX, sourceY) {
                 this.callback(sourceX, sourceY);
-            }
+            };
             
             state.createLightSource = function(x, y) {
                 var lightSource = new LightSource(x, y);
@@ -116,7 +117,7 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                 var soundListener = new SoundListener(x, y, callback);
                 state.soundListeners.push(soundListener);
                 return soundListener;
-            },
+            };
             state.notifyAudible = function(x, y, v) {
                 state.soundSources.push(new SoundSource(x, y, v));
             };
@@ -137,5 +138,5 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
             };
             return state;
         }
-    }
+    };
 });

@@ -1,0 +1,24 @@
+{
+  "name": "hgc-ld33",
+  "version": "0.1.0",
+  "description": "Minotaur and the Theseus - A game for Ludum Dare 33",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hgcummings/matt.git"
+  },
+  "author": "hgcummings",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hgcummings/matt/issues"
+  },
+  "homepage": "https://github.com/hgcummings/matt#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}

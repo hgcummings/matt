@@ -1,6 +1,7 @@
 define(function() {
+    'use strict';
     var activeKey;
-    
+
     var keyMap = {
         87: 0,
         38: 0,
@@ -11,7 +12,7 @@ define(function() {
         65: 3,
         37: 3
     };
-    
+
     function directionFromKey(keyCode) {
         if (keyCode && keyMap.hasOwnProperty(keyCode.toString())) {
             return keyMap[keyCode];
@@ -19,26 +20,26 @@ define(function() {
             return null;
         }
     }
-    
-    var onKeyDown = function (event) {
+
+    var onKeyDown = function(event) {
         if (directionFromKey(event.keyCode) !== null) {
             activeKey = event.keyCode;
             event.preventDefault();
         }
     };
-    
-    var onKeyUp = function (event) {
+
+    var onKeyUp = function(event) {
         if (event.keyCode === activeKey) {
             activeKey = null;
         }
     };
-    
+
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
-    
+
     return {
         getDirection: function() {
             return directionFromKey(activeKey);
         }
-    }
-})
+    };
+});

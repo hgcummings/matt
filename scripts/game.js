@@ -2,6 +2,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
     'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals'],
     function(gridModel, minotaurModel, theseusModel, environmentModel, difficulty,
         gridView, minotaurView, theseusView, environmentView, viewGlobals) {
+        'use strict';
         return {
             init: function() {
                 var environment = environmentModel.init(difficulty.TRICKSY);
@@ -15,7 +16,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                 canvas.height = viewGlobals.scale * grid.height;
                 var context = canvas.getContext('2d');
                 container.appendChild(canvas);
-                
+
                 var gameTime = new Date().getTime();
                 var animate = function() {
                     var newTime = new Date().getTime();
@@ -26,15 +27,16 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     theseus.update(dt);
                     environment.update(dt);
 
-                    gridView.draw(context, grid);                    
+                    gridView.draw(context, grid);
                     environmentView.draw(context, environment);
                     minotaurView.draw(context, minotaur);
                     theseusView.draw(context, theseus);
-                    
+
                     window.requestAnimationFrame(animate);
                 };
-                
+
                 window.requestAnimationFrame(animate);
             }
-        }
-});
+        };
+    }
+);

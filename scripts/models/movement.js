@@ -1,4 +1,5 @@
 define(function() {
+    'use strict';
     return {
         /*
          Tweening function, assumes that a and b differ by 1
@@ -28,5 +29,5 @@ define(function() {
             }
             return ret;
         }
-    }
-})
+    };
+});

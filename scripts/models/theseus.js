@@ -1,5 +1,6 @@
 define(['input', 'models/movement'], function(input, movement) {
-    var target = null;
+    'use strict';
+    //var target = null;
     var movingTo = null;
     var obstructed = false;
     
@@ -29,7 +30,7 @@ define(['input', 'models/movement'], function(input, movement) {
             
             var speed = function() {
                 return obstructed ? difficulty.theseusWallMoveSpeed : difficulty.theseusSpeed;
-            }
+            };
             
             state.update = function(dt) {
                 if (movingTo) {
@@ -49,8 +50,8 @@ define(['input', 'models/movement'], function(input, movement) {
                         movingTo = moveTo;
                     }
                 }
-            }
+            };
             return state;
         }
-    }
+    };
 });

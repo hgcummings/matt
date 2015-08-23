@@ -1,6 +1,19 @@
 define(['views/globals'], function(viewGlobals) {
+    'use strict';
     return {
         draw: function(context, model) {
+            var drawPaths = function(paths, colour) {
+                for (var j = 0; j < paths.length; ++j) {
+                    var path = paths[j];
+                    context.strokeStyle = colour;
+                    context.beginPath();
+                    context.moveTo(path[0][0] * viewGlobals.scale, path[0][1] * viewGlobals.scale);
+                    context.lineTo(path[1][0] * viewGlobals.scale, path[1][1] * viewGlobals.scale);
+                    context.stroke();
+                    context.closePath();
+                }
+            };
+                
             for (var i = 0; i < model.lightSources.length; ++i) {
                 for (var j = 0; j < model.lightSources[i].lightCells.length; ++j) {
                     var cell = model.lightSources[i].lightCells[j];
@@ -15,30 +28,17 @@ define(['views/globals'], function(viewGlobals) {
                     context.restore();
                 }
                 
-                var drawPaths = function(paths, colour) {
-                    for (var j = 0; j < paths.length; ++j) {
-                        var path = paths[j];
-                        context.strokeStyle = colour;
-                        context.beginPath();
-                        context.moveTo(path[0][0] * viewGlobals.scale, path[0][1] * viewGlobals.scale);
-                        context.lineTo(path[1][0] * viewGlobals.scale, path[1][1] * viewGlobals.scale);
-                        context.stroke();
-                        context.closePath();
-                    }
-                }
-                
                 if (window.DEBUG_ENABLED) {
                     drawPaths(model.lightSources[i].blockedPaths, '#f00');
                     drawPaths(model.lightSources[i].clearPaths, '#0f0');
                 }
             }
             
-            for (var i = 0; i < model.soundSources.length; ++i) {
-                var source = model.soundSources[i];
+            model.soundSources.forEach(function(source) {
                 context.save();
                 context.globalAlpha = 1 - (source.r / source.v);
                 context.lineWidth = viewGlobals.scale / 8;
-                context.strokeStyle = '#fff'
+                context.strokeStyle = '#fff';
                 context.beginPath();
                 context.arc(
                     viewGlobals.scale * source.x,
@@ -48,7 +48,7 @@ define(['views/globals'], function(viewGlobals) {
                 context.stroke();
                 context.closePath();
                 context.restore();
-            }
+            });
         }
     };
-})
+});

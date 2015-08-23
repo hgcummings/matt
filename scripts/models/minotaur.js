@@ -1,4 +1,5 @@
 define(['input', 'models/movement'], function(input, movement) {
+    'use strict';
     var movingTo = null;
 
     return {
@@ -24,15 +25,15 @@ define(['input', 'models/movement'], function(input, movement) {
                         movingTo = moveTo;
                     }
                 }
-            }
+            };
             
             var state = {
                 update: update,
                 x: grid.width / 2,
                 y: grid.height / 2
-            }
+            };
                 
             return state;
         }
-    }
+    };
 });

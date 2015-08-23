@@ -1,4 +1,5 @@
 define(function() {
+    'use strict';
     return {
         EASY: {
             mazeDensity: 0.6,
@@ -32,5 +33,5 @@ define(function() {
             theseusSpeed: 0.0048,
             theseusWallMoveSpeed: 0.0016
         }
-    }
+    };
 });

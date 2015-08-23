@@ -1,4 +1,5 @@
 define(['views/globals'], function(viewGlobals) {
+    'use strict';
     return {
         draw: function(context, model) {
             context.fillStyle = '#000000';
@@ -32,5 +33,5 @@ define(['views/globals'], function(viewGlobals) {
                 context.closePath();
             }
         }
-    }
+    };
 });
