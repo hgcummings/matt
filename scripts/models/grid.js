@@ -38,8 +38,6 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
             }.bind(this));
             this.recalculateWalls();
             if (this.wallDirections[0] === this.targetWallDirections[0]) {
-                delete this.rotationDuration;
-                delete this.targetWallDirections;
                 return false;
             }
             return true;

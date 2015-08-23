@@ -37,6 +37,7 @@ define(['views/globals'], function(viewGlobals) {
                 for (var i = 0; i < window.DEBUG_FOUND_PATH.length - 1; ++i) {
                     var start = window.DEBUG_FOUND_PATH[i];
                     var end = window.DEBUG_FOUND_PATH[i + 1];
+                    context.save();
                     context.globalAlpha = 0.5;
                     context.strokeStyle = '#fff'
                     context.beginPath();
@@ -46,6 +47,34 @@ define(['views/globals'], function(viewGlobals) {
                     context.closePath();
                     context.restore();
                 }
+            }
+            
+            if (window.DEBUG_PROBABILITIES) {
+                var max = 0;
+                
+                for (var i = 0; i < window.DEBUG_PROBABILITIES.length; ++i) {
+                    for (var j = 0; j < window.DEBUG_PROBABILITIES[i].length; ++j) {
+                        max = Math.max(max, window.DEBUG_PROBABILITIES[i][j]);
+                    }
+                }
+                
+                if (max > 0) {
+                    for (var i = 0; i < window.DEBUG_PROBABILITIES.length; ++i) {
+                    for (var j = 0; j < window.DEBUG_PROBABILITIES[i].length; ++j) {
+                        context.save();
+                        context.globalAlpha = Math.min(1, window.DEBUG_PROBABILITIES[i][j] / max);
+                        context.fillStyle = '#a52a2a';
+                        context.fillRect(
+                            i * viewGlobals.scale,
+                            j * viewGlobals.scale,
+                            viewGlobals.scale,
+                            viewGlobals.scale);
+                        context.restore();
+                    }
+                }
+                }
+                
+                
             }
         }
     };

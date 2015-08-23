@@ -5,13 +5,15 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
             var state = {
                 lightSources: [],
                 soundSources: [],
-                soundListeners: []
+                soundListeners: [],
+                visibleEntities: {}
             };
             var obstructions = [];
             
             function LightSource(x, y) {
                 this.updatePosition(x, y);
                 this.watchers = [];
+                this.visibleEntities = [];
             }
             
             LightSource.prototype.updatePosition = function(x, y) {
@@ -39,28 +41,26 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                         }
                     }
                 }
+                
+                this.visibleEntities = [];
+                for (var key in state.visibleEntities) {
+                    if (state.visibleEntities.hasOwnProperty(key)) {
+                        var entity = state.visibleEntities[key];
+                        if (this.illuminatesPosition(entity.x, entity.y)) {
+                            this.visibleEntities.push(entity);
+                        }
+                    }
+                }
             };
             
             LightSource.prototype.illuminatesPosition = function(x, y) {
                 for (var i = 0; i < this.lightCells.length; ++i) {
-                    if (Math.round(this.lightCells[i].x * 2) / 2 === Math.round(x * 2) / 2 &&
-                        Math.round(this.lightCells[i].y * 2) / 2 === Math.round(y * 2) / 2) {
+                    var cell = this.lightCells[i];
+                    if (cell.x - 0.5 < x && x < cell.x + 0.5 && cell.y - 0.5 < y && y < cell.y + 0.5) {
                         return true;
                     }
                 }
                 return false;
-            };
-            
-            LightSource.prototype.notify = function(x, y) {
-                if (this.illuminatesPosition(x, y)) {
-                    for (var i = 0; i < this.watchers.length; ++i) {
-                        this.watchers[i].notify(x, y);
-                    }
-                }
-            };
-            
-            LightSource.prototype.watch = function(callback) {
-                this.watchers.push(callback);
             };
             
             var speedOfSound = 0.01; // Squares per millisecond
@@ -121,10 +121,8 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
             state.notifyAudible = function(x, y, v) {
                 state.soundSources.push(new SoundSource(x, y, v));
             };
-            state.notifyVisible = function(x, y) {
-                for (var i = 0; i < state.lightSources.length; ++i) {
-                    state.lightSources[i].notify(x, y);
-                }
+            state.registerVisibleEntity = function(key, entity) {
+                state.visibleEntities[key] = entity;
             };
             state.update = function(dt) {
                 for (var i = state.soundSources.length - 1; i >= 0; --i) {
