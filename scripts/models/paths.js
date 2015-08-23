@@ -1,5 +1,6 @@
+/* global WE */
 define(['models/movement', 'lodash'], function(movement, _) {    
-    var blocked = {
+    var costs = {
         NS: [],
         WE: []
     }
@@ -27,6 +28,32 @@ define(['models/movement', 'lodash'], function(movement, _) {
     
     return {
         init: function(difficulty, grid) {
+            // Cost of moving from one square to the next
+            var blockedCost = 1 / difficulty.theseusWallMoveSpeed;
+            var unblockedCost = 1 /difficulty.theseusSpeed;
+            
+            /*Expected cost is a bit complicated to calculate. Importantly though, it is *not* a weighted average
+              of the two numbers above, because there's usually a better option than powering through a solid wall.
+              A reasonable approximation is ('b' and 'u' referring to blocked and unblocked costs):
+                (u * probability of getting straight through) +
+                (3u * probability of getting around one side or the other) +
+                (5u * probability of making a five-step detour) +
+                (7u * probability of making a seven-step detour) +
+                (... and so on until the 'u' cost is greater than just paying 'b' and pushing straight through)
+                (b * the remaining probability)
+              For the middle terms, we are effectively walking around a wall with two possibilities for where
+              the first segment is placed (to the left or right of the one in front of us) and three possibilties
+              for each subsequent segment (carrying on straight, turning left or right), which gives:
+                   3u * 2(1-p)^3, 5u * 2*3(1-p)^5, 7u * 2*9(1-p)^7, etc...*/
+            var cumulativeProbability = (1 - difficulty.mazeDensity);
+            var expectedCost = unblockedCost * cumulativeProbability;
+            for (var n = 3; n * unblockedCost < blockedCost; n += 2) {
+                var probability = 2 * Math.pow(1 - difficulty.mazeDensity, n);
+                expectedCost += Math.pow(3, ((n - 1) / 2) - 1) * unblockedCost * probability;
+                cumulativeProbability += probability;
+            }
+            expectedCost += (1-cumulativeProbability) * blockedCost;
+    
             function isInGrid(path) {
                 return grid.isValidPosition(path.start) && grid.isValidPosition([
                     path.orientation === 'WE' ? path.start[0] + 1 : path.start[0],
@@ -35,25 +62,25 @@ define(['models/movement', 'lodash'], function(movement, _) {
             }
             
             for (var i = 0; i < grid.width; ++i) {
-                blocked.NS[i] = [];
-                blocked.WE[i] = [];
+                costs.NS[i] = [];
+                costs.WE[i] = [];
                 for (var j = 0; j < grid.height; ++j) {
                     if (isInGrid({start: [i, j], orientation: 'NS'})) {
-                        blocked.NS[i][j] = difficulty.mazeDensity;
+                        costs.NS[i][j] = expectedCost;
                     }
                     if (isInGrid({start: [i, j], orientation: 'WE'})) {
-                        blocked.WE[i][j] = difficulty.mazeDensity;
+                        costs.WE[i][j] = expectedCost;
                     }
                 }
             }
     
-            var lookupBlocked = function (path) {
-                return blocked[path.orientation][path.start[0]][path.start[1]];
+            var lookupCost = function (path) {
+                return costs[path.orientation][path.start[0]][path.start[1]];
             }
     
-            var updatedBlocked = function(path, value) {
+            var updatedCost = function(path, value) {
                 if (isInGrid(path)) {
-                    blocked[path.orientation][path.start[0]][path.start[1]] = value;
+                    costs[path.orientation][path.start[0]][path.start[1]] = value;
                 }
             }
             
@@ -61,15 +88,9 @@ define(['models/movement', 'lodash'], function(movement, _) {
                 moveTo: function(target, start) {
                     var cameFrom = {};
                     
-                    var unblockedStepCost = 1 / difficulty.theseusSpeed;
-                    var blockedStepAdditionalCost = (1 / difficulty.theseusWallMoveSpeed) - unblockedStepCost;
-
-                    var stepCost = function(blockedEstimate) {
-                        return unblockedStepCost + (blockedStepAdditionalCost * blockedEstimate);
-                    }
-                    
                     var estimatedCost = function(fromPoint, toPoint) {
-                        return Math.abs(fromPoint[0] - toPoint[0]) + Math.abs(fromPoint[1] - toPoint[1]);
+                        var steps = Math.abs(fromPoint[0] - toPoint[0]) + Math.abs(fromPoint[1] - toPoint[1]);
+                        return unblockedCost * steps;
                     }
                     
                     var reconstructPath = function(current) {
@@ -138,8 +159,7 @@ define(['models/movement', 'lodash'], function(movement, _) {
                             }
                             
                             var tentativeGScore = getScore(current, 'g') +
-                                stepCost(lookupBlocked(normalisePath([current, neighbour])));
-                            console.log(tentativeGScore);
+                                (lookupCost(normalisePath([current, neighbour])));
                             
                             if (!contains(open, neighbour) || tentativeGScore < getScore(neighbour, 'g'))
                             {
@@ -156,23 +176,23 @@ define(['models/movement', 'lodash'], function(movement, _) {
                 update: function(pathInfo, dt) {
                     for (var i = 0; i < grid.width; ++i) {
                         for (var j = 0; j < grid.height; ++j) {
-                            blocked.NS[i][j] = movement.tween(
-                                blocked.NS[i][j], difficulty.mazeDensity, dt * decay);
-                            blocked.WE[i][j] = movement.tween(
-                                blocked.WE[i][j], difficulty.mazeDensity, dt * decay);
+                            costs.NS[i][j] = movement.tween(
+                                costs.NS[i][j], expectedCost, dt * decay);
+                            costs.WE[i][j] = movement.tween(
+                                costs.WE[i][j], expectedCost, dt * decay);
                         }
                     }
                     
                     pathInfo.blockedPaths.forEach(function(path) {
-                        updatedBlocked(normalisePath(path), 1);
+                        updatedCost(normalisePath(path), blockedCost);
                     });
                     pathInfo.clearPaths.forEach(function(path) {
-                        updatedBlocked(normalisePath(path), 0);
+                        updatedCost(normalisePath(path), unblockedCost);
                     });
                     if (window.DEBUG_PATHS_ENABLED) {
-                        window.DEBUG_BLOCKED_PATHS = blocked;
+                        window.DEBUG_PATH_COSTS = costs;
                     } else {
-                        delete window.DEBUG_BLOCKED_PATHS;
+                        delete window.DEBUG_PATH_COSTS;
                     }
                 }
             }
