@@ -1,14 +1,15 @@
-define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment', 'models/difficulty',
-    'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals', 'views/debug'],
-    function(gridModel, minotaurModel, theseusModel, environmentModel, difficulty,
-        gridView, minotaurView, theseusView, environmentView, viewGlobals, debugView) {
+define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment',
+    'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals', 'views/hint'],
+    function(gridModel, minotaurModel, theseusModel, environmentModel,
+        gridView, minotaurView, theseusView, environmentView, viewGlobals, hintView) {
         'use strict';
         return {
-            init: function() {
-                var environment = environmentModel.init(difficulty.TRICKSY);
-                var grid = gridModel.init(difficulty.TRICKSY, environment);
-                var minotaur = minotaurModel.init(difficulty.TRICKSY, grid, environment);
-                var theseus = theseusModel.init(difficulty.TRICKSY, grid, environment);
+            init: function(difficulty) {
+                document.getElementById('menu').style.display = 'none';
+                var environment = environmentModel.init(difficulty);
+                var grid = gridModel.init(difficulty, environment);
+                var minotaur = minotaurModel.init(difficulty, grid, environment);
+                var theseus = theseusModel.init(difficulty, grid, environment);
 
                 var container = document.getElementById('game');
                 var canvas = document.createElement('canvas');
@@ -18,6 +19,20 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                 container.appendChild(canvas);
 
                 var gameTime = new Date().getTime();
+                
+                var endGame = function(resultClass, resultText) {
+                    hintView.setText('');
+                    container.removeChild(canvas);
+                    document.getElementById('menu').style.display = 'block';
+                    
+                    var gameOver = document.getElementById('gameOver');
+                    gameOver.className = 'alert';                       
+                    var result = document.getElementById('result');
+                    gameOver.classList.add(resultClass);
+                    result.innerText = resultText;
+                }
+                
+                hintView.setText("Theseus is coming for you. Better run! Use arrow keys or W,A,S,D to move...");
                 var animate = function() {
                     var newTime = new Date().getTime();
                     var dt = newTime - gameTime;
@@ -26,12 +41,23 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     minotaur.update(dt);
                     theseus.update(dt);
                     environment.update(dt);
+                    
+                    if (theseus.x === minotaur.x && theseus.y === minotaur.y) {                        
+                        if (theseus.light > 0) {
+                            endGame('alert-danger', 'Theseus hunted you down and defeated you.');
+                        } else {
+                            endGame('alert-success', 'The hunter becomes the hunted. You defeated Theseus!');
+                        }
+                    } else if (theseus.light <= 0 &&
+                      theseus.x === environment.lightSources[0].x &&
+                      theseus.y - 0.5 === environment.lightSources[0].y) {
+                        endGame('alert-warning', 'You evaded Theseus, but he escaped to fight another day.')
+                    }
 
                     gridView.draw(context, grid);
                     environmentView.draw(context, environment);
                     minotaurView.draw(context, minotaur);
                     theseusView.draw(context, theseus);
-                    debugView.draw(context);
 
                     window.requestAnimationFrame(animate);
                 };

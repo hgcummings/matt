@@ -19,7 +19,8 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
             
             var state = {
                 x: grid.width / 2,
-                y: 0.5
+                y: 0.5,
+                light: difficulty.theseusLight
             };
             var lightSource = environment.createLightSource(state.x, state.y);
             
@@ -64,6 +65,10 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
             var soundListener = environment.createSoundListener(state.x, state.y, resetEnemyProbabilities);
 
             var chooseNewTarget = function() {
+                if (state.light <= 0) {
+                    return [Math.floor(environment.lightSources[0].x), Math.floor(environment.lightSources[0].y)];
+                }
+                
                 var max = 0;
                 var maxTargets = [];
                 
@@ -91,6 +96,13 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
             
             state.update = function(dt) {
                 paths.update(lightSource, dt);
+                state.light -= dt / 1000;
+                
+                if (state.light <= 0) {
+                    lightSource.deactivate();
+                    target = chooseNewTarget();
+                }
+                                
                 soundListener.updatePosition(state.x, state.y);
                 if (movingTo) {
                     state.x = movement.tween(state.x, movingTo[0], dt * speed());

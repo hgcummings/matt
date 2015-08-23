@@ -4,7 +4,16 @@ require.config({
     }
 });
 
-require(['game'], function(game) {
+require(['game', 'models/difficulty'], function(game, difficulty) {
     'use strict';
-    game.init();
+    
+    var startButtons = document.getElementsByClassName('btn-start');
+    for (var i = 0; i < startButtons.length; ++i) {
+        var button = startButtons[i];
+        button.onclick = function() {
+            game.init(difficulty[this.innerText.toUpperCase()])
+        }
+    }
+    
+    game.init(difficulty.TRICKSY);
 });

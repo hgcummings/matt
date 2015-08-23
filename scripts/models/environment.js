@@ -1,4 +1,4 @@
-define(['models/movement', 'models/geometry'], function(movement, geometry) {
+define(['models/movement', 'models/geometry', 'views/hint'], function(movement, geometry, hintView) {
     'use strict';
     return {        
         init: function() {
@@ -63,6 +63,13 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                 return false;
             };
             
+            LightSource.prototype.deactivate = function() {
+                var index = state.lightSources.indexOf(this);
+                if (index !== -1) {
+                    state.lightSources.splice(index, 1);
+                }
+            }
+            
             var speedOfSound = 0.01; // Squares per millisecond
             
             function SoundSource(x, y, v) {
@@ -102,6 +109,7 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
             };
             
             SoundListener.prototype.notify = function(sourceX, sourceY) {
+                hintView.setText("Be careful! If Theseus hears you it will help him track you down...")
                 this.callback(sourceX, sourceY);
             };
             

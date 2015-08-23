@@ -8,19 +8,32 @@
             body {
                 text-align: center;
             }
+            p {
+                font-size: 1.2em;
+            }
+            #gameOver {
+                width: 50%;
+                margin: 5em auto;
+                padding-bottom: 2.5em;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Minotaur and the Theseus</h1>
             <div id="game"></div>
+            <p id="hint"></p>
             <div id="menu" style="display: none">
+                <div id="gameOver" class="alert">
+                    <h2>Game Over!</h2>
+                    <p id="result"></p>
+                </div>
                 <h3>Play again? Choose difficulty:</h3>
                 <p>
-                    <a class="btn btn-success">Easy</a>
-                    <a class="btn btn-info">Tricksy</a>
-                    <a class="btn btn-warning">Fiendish</a>
-                    <a class="btn btn-danger">Monstrous</a>
+                    <a class="btn btn-success btn-start">Easy</a>
+                    <a class="btn btn-info btn-start">Tricksy</a>
+                    <a class="btn btn-warning btn-start">Fiendish</a>
+                    <a class="btn btn-danger btn-start">Monstrous</a>
                 </p>
             </div>
         </div>
