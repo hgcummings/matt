@@ -1,13 +1,13 @@
-define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment',
+define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment', 'models/difficulty',
     'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals'],
-    function(gridModel, minotaurModel, theseusModel, environmentModel, 
+    function(gridModel, minotaurModel, theseusModel, environmentModel, difficulty,
         gridView, minotaurView, theseusView, environmentView, viewGlobals) {
         return {
             init: function() {
-                var environment = environmentModel.init();
-                var grid = gridModel.init(environment);
-                var minotaur = minotaurModel.init(grid, environment);
-                var theseus = theseusModel.init(grid, environment);
+                var environment = environmentModel.init(difficulty.TRICKSY);
+                var grid = gridModel.init(difficulty.TRICKSY, environment);
+                var minotaur = minotaurModel.init(difficulty.TRICKSY, grid, environment);
+                var theseus = theseusModel.init(difficulty.TRICKSY, grid, environment);
 
                 var container = document.getElementById('game');
                 var canvas = document.createElement('canvas');

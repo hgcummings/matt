@@ -2,7 +2,7 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
     var width = 19;
     var height = 19;
     
-    function generatePillars() {
+    function generatePillars(density) {
         var pillars = [];
         
         function Pillar(x, y, wallDirections) {
@@ -51,7 +51,7 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
                 }
                 var walls = [];
                 for (var k = 0; k < 4; ++k) {
-                    if (Math.random() > 0.5) {
+                    if (Math.random() < density) {
                         walls.push(k);
                     }
                 }
@@ -65,8 +65,8 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
     }
     
     return {
-        init: function(environment) {
-            var pillars = generatePillars();
+        init: function(difficulty, environment) {
+            var pillars = generatePillars(difficulty.mazeDensity);
             environment.registerObstructions(pillars);
             var activePillars = [];
             var update = function(dt) {

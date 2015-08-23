@@ -1,12 +1,10 @@
 define(['input', 'models/movement'], function(input, movement) {
-    var normalSpeed = 0.0032; // Squares per millisecond
-    var wallMovingSpeed = 0.0004;
     var target = null;
     var movingTo = null;
     var obstructed = false;
 
     return {
-        init: function(grid, environment) {
+        init: function(difficulty, grid, environment) {
             var state = {
                 x: grid.width / 2,
                 y: 0.5
@@ -14,7 +12,7 @@ define(['input', 'models/movement'], function(input, movement) {
             var lightSource = environment.createLightSource(state.x, state.y);
             
             var speed = function() {
-                return obstructed ? wallMovingSpeed : normalSpeed;
+                return obstructed ? difficulty.theseusWallMoveSpeed : difficulty.theseusSpeed;
             }
             
             state.update = function(dt) {
@@ -30,7 +28,8 @@ define(['input', 'models/movement'], function(input, movement) {
                     var move = movement.directionVector(direction);
                     var moveTo = [state.x + move[0], state.y + move[1]];
                     if (grid.isValidPosition(moveTo)) {
-                        obstructed = !!grid.notifyPlayerMove([state.x, state.y], moveTo, 1 / wallMovingSpeed);
+                        obstructed = !!grid.notifyPlayerMove(
+                            [state.x, state.y], moveTo, 1 /  difficulty.theseusWallMoveSpeed);
                         movingTo = moveTo;
                     }
                 }

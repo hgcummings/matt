@@ -1,13 +1,12 @@
 define(['input', 'models/movement'], function(input, movement) {
-    var speed = 0.0016; // Squares per millisecond
     var movingTo = null;
 
     return {
-        init: function(grid, environment) {
+        init: function(difficulty, grid, environment) {
             var update = function(dt) {
                 if (movingTo) {
-                    state.x = movement.tween(state.x, movingTo[0], dt * speed);
-                    state.y = movement.tween(state.y, movingTo[1], dt * speed);
+                    state.x = movement.tween(state.x, movingTo[0], dt * difficulty.minotaurSpeed);
+                    state.y = movement.tween(state.y, movingTo[1], dt * difficulty.minotaurSpeed);
                     if (state.x === movingTo[0] && state.y === movingTo[1]) {
                         movingTo = null;
                     }
@@ -15,11 +14,12 @@ define(['input', 'models/movement'], function(input, movement) {
                     var move = movement.directionVector(input.getDirection());
                     var moveTo = [state.x + move[0], state.y + move[1]];
                     if (grid.isValidPosition(moveTo)) {
-                        var obstruction = grid.notifyPlayerMove([state.x, state.y], moveTo, 1 / speed);
+                        var obstruction = grid.notifyPlayerMove(
+                            [state.x, state.y], moveTo, 1 / difficulty.minotaurSpeed);
                         if (obstruction) {
-                            environment.notifyAudible(obstruction.x, obstruction.y, 6);
+                            environment.notifyAudible(obstruction.x, obstruction.y, difficulty.wallMoveVolume);
                         } else {
-                            environment.notifyAudible(state.x, state.y, 4);
+                            environment.notifyAudible(state.x, state.y, difficulty.footstepVolume);
                         }
                         movingTo = moveTo;
                     }
