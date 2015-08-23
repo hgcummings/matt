@@ -68,13 +68,14 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
         init: function(environment) {
             var pillars = generatePillars();
             environment.registerObstructions(pillars);
-            var activePillar;
+            var activePillars = [];
             var update = function(dt) {
-                if (activePillar) {
+                for (var i = activePillars.length - 1; i >= 0; --i) {
+                    var activePillar = activePillars[i];
                     var stillActive = activePillar.update(dt);
                     if (!stillActive) {
                         environment.registerObstructions(pillars);
-                        activePillar = null;
+                        activePillars.splice(i, 1);
                     }
                 }
             }
@@ -82,10 +83,11 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
             var notifyPlayerMove = function(start, end, duration) {
                 var obstruction = geometry.findObstruction(pillars, start, end);
                 if (obstruction) {
-                    activePillar = obstruction.pillar;
-                    environment.notifyAudible(activePillar.x, activePillar.y, 6);
-                    activePillar.rotate(obstruction.direction, duration);
+                    obstruction.pillar.rotate(obstruction.direction, duration);
+                    activePillars.push(obstruction.pillar);
+                    return obstruction.pillar;
                 }
+                return null;
             }
             
             var isValidPosition = function(pos) {

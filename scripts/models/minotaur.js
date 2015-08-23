@@ -15,8 +15,12 @@ define(['input', 'models/movement'], function(input, movement) {
                     var move = movement.directionVector(input.getDirection());
                     var moveTo = [state.x + move[0], state.y + move[1]];
                     if (grid.isValidPosition(moveTo)) {
-                        grid.notifyPlayerMove([state.x, state.y], moveTo, 1 / speed);
-                        environment.notifyAudible(state.x, state.y, 4);
+                        var obstruction = grid.notifyPlayerMove([state.x, state.y], moveTo, 1 / speed);
+                        if (obstruction) {
+                            environment.notifyAudible(obstruction.x, obstruction.y, 6);
+                        } else {
+                            environment.notifyAudible(state.x, state.y, 4);
+                        }
                         movingTo = moveTo;
                     }
                 }
