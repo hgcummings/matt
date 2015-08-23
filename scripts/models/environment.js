@@ -3,7 +3,8 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
         init: function() {
             var state = {
                 lightSources: [],
-                soundSources: []
+                soundSources: [],
+                soundListeners: []
             }
             var obstructions = [];
             
@@ -56,6 +57,48 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
                 this.watchers.push(callback);
             }
             
+            var speedOfSound = 0.1; // Squares per millisecond
+            
+            function SoundSource(x, y, v) {
+                this.x = x;
+                this.y = y;
+                this.v = v;
+                this.r = 0;
+            }
+            
+            SoundSource.prototype.update = function(dt) {
+                var newR = Math.min(this.v, this.r + speedOfSound);
+                for (var i = 0; i < state.soundListeners.length; ++i) {
+                    var listener = state.soundListeners[i];
+                    var distanceSquared = (
+                        (listener.x - this.x) * (listener.x - this.x) + 
+                        (listener.y - this.y) * (listener.y - this.y));
+                    if (distanceSquared > (this.r * this.r) && distanceSquared <= (newR * newR)) {
+                        listener.notify(this.x, this.y);
+                    }
+                }
+                this.r = newR;
+            }
+            
+            SoundSource.prototype.active = function() {
+                return this.r < this.v;
+            }
+            
+            function SoundListener(x, y, callback) {
+                this.updatePosition(x, y);
+                this.watchers = [];
+                this.callback = callback;
+            }
+            
+            SoundListener.prototype.updatePosition = function (x, y) {
+                this.x = x;
+                this.y = y;
+            }
+            
+            SoundListener.prototype.notify = function(sourceX, sourceY) {
+                this.callback(sourceX, sourceY);
+            }
+            
             state.createLightSource = function(x, y) {
                 var lightSource = new LightSource(x, y);
                 state.lightSources.push(lightSource);
@@ -64,14 +107,28 @@ define(['models/movement', 'models/geometry'], function(movement, geometry) {
             state.registerObstructions = function(pillars) {
                 obstructions = pillars;
             };
+            state.createSoundListener = function(x, y, callback) {
+                var soundListener = new SoundListener(x, y, callback);
+                state.soundListeners.push(soundListener);
+                return soundListener;
+            },
             state.notifyAudible = function(x, y, v) {
-                    
+                state.soundSources.push(new SoundSource(x, y, v));
             };
-            state.notifyVisible =function(x, y) {
-                    
+            state.notifyVisible = function(x, y) {
+                for (var i = 0; i < state.lightSources.length; ++i) {
+                    state.lightSources[i].notify(x, y);
+                }
             };
             state.update = function(dt) {
-                    
+                for (var i = state.soundSources.length - 1; i >= 0; --i) {
+                    var soundSource = state.soundSources[i];
+                    if (soundSource.active()) {
+                        soundSource.update(dt);
+                    } else {
+                        state.soundSources.splice(i, 1);
+                    }
+                }
             };
             return state;
         }

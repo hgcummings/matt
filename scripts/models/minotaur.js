@@ -3,7 +3,7 @@ define(['input', 'models/movement'], function(input, movement) {
     var movingTo = null;
 
     return {
-        init: function(grid) {
+        init: function(grid, environment) {
             var update = function(dt) {
                 if (movingTo) {
                     state.x = movement.tween(state.x, movingTo[0], dt * speed);
@@ -16,6 +16,7 @@ define(['input', 'models/movement'], function(input, movement) {
                     var moveTo = [state.x + move[0], state.y + move[1]];
                     if (grid.isValidPosition(moveTo)) {
                         grid.notifyPlayerMove([state.x, state.y], moveTo, 1 / speed);
+                        environment.notifyAudible(state.x, state.y, 4);
                         movingTo = moveTo;
                     }
                 }

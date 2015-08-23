@@ -71,9 +71,10 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
             var activePillar;
             var update = function(dt) {
                 if (activePillar) {
-                    activePillar = activePillar.update(dt) ? activePillar : null;
-                    if (!activePillar) {
+                    var stillActive = activePillar.update(dt);
+                    if (!stillActive) {
                         environment.registerObstructions(pillars);
+                        activePillar = null;
                     }
                 }
             }
@@ -82,6 +83,7 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
                 var obstruction = geometry.findObstruction(pillars, start, end);
                 if (obstruction) {
                     activePillar = obstruction.pillar;
+                    environment.notifyAudible(activePillar.x, activePillar.y, 6);
                     activePillar.rotate(obstruction.direction, duration);
                 }
             }

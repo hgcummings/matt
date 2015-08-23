@@ -15,6 +15,23 @@ define(['views/globals'], function(viewGlobals) {
                     context.restore();
                 }
             }
+            
+            for (var i = 0; i < model.soundSources.length; ++i) {
+                var source = model.soundSources[i];
+                context.save();
+                context.globalAlpha = 1 - (source.r / source.v);
+                context.lineWidth = viewGlobals.scale / 8;
+                context.strokeStyle = '#fff'
+                context.beginPath();
+                context.arc(
+                    viewGlobals.scale * source.x,
+                    viewGlobals.scale * source.y,
+                    viewGlobals.scale * source.r,
+                    0, Math.PI * 2, false);
+                context.stroke();
+                context.closePath();
+                context.restore();
+            }
         }
     };
 })
