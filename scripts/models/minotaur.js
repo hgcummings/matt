@@ -8,6 +8,7 @@ define(['input', 'models/movement'], function(input, movement) {
                 if (movingTo) {
                     state.x = movement.tween(state.x, movingTo[0], dt * difficulty.minotaurSpeed);
                     state.y = movement.tween(state.y, movingTo[1], dt * difficulty.minotaurSpeed);
+                    environment.notifyVisible(state.x, state.y);
                     if (state.x === movingTo[0] && state.y === movingTo[1]) {
                         movingTo = null;
                     }

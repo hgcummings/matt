@@ -1,22 +1,18 @@
-define(['input', 'models/movement'], function(input, movement) {
+define(['input', 'models/movement', 'models/paths'], function(input, movement, pathsModel) {
     'use strict';
     //var target = null;
     var movingTo = null;
     var obstructed = false;
     
-    var blockNsP = []; // Confidence that a North-Source path is blocked
-    var blockWeP = []; // Confidence that an East-West path is blocked
+    var paths;
     var enemyP = []; // Confidence of the location of the enemy
 
     return {
         init: function(difficulty, grid, environment) {
+            paths = pathsModel.init(difficulty, grid);
             for (var i = 0; i < grid.width; ++i) {
-                blockNsP[i] = [];
-                blockWeP[i] = [];
                 enemyP[i] = [];
                 for (var j = 0; j < grid.width; ++j) {
-                    blockNsP[i][j] = 0;
-                    blockWeP[i][j] = 0;
                     enemyP[i][j] = 0;
                 }
             }
@@ -50,6 +46,7 @@ define(['input', 'models/movement'], function(input, movement) {
                         movingTo = moveTo;
                     }
                 }
+                paths.update(lightSource, dt);
             };
             return state;
         }

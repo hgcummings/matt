@@ -92,7 +92,7 @@ define(['models/geometry', 'models/movement'], function(geometry, movement) {
             };
             
             var isValidPosition = function(pos) {
-                return pos[0] > 0 && pos[0] < state.width && pos[1] > 0 && pos[1] < state.height; 
+                return pos[0] >= 0 && pos[0] < state.width && pos[1] >= 0 && pos[1] < state.height; 
             };
             
             var state = {

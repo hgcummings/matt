@@ -1,7 +1,7 @@
 define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment', 'models/difficulty',
-    'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals'],
+    'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals', 'views/debug'],
     function(gridModel, minotaurModel, theseusModel, environmentModel, difficulty,
-        gridView, minotaurView, theseusView, environmentView, viewGlobals) {
+        gridView, minotaurView, theseusView, environmentView, viewGlobals, debugView) {
         'use strict';
         return {
             init: function() {
@@ -31,6 +31,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     environmentView.draw(context, environment);
                     minotaurView.draw(context, minotaur);
                     theseusView.draw(context, theseus);
+                    debugView.draw(context);
 
                     window.requestAnimationFrame(animate);
                 };
