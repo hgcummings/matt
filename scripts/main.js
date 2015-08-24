@@ -11,7 +11,7 @@ require(['game', 'audio', 'models/difficulty'], function(game, audio, difficulty
     for (var i = 0; i < startButtons.length; ++i) {
         var button = startButtons[i];
         button.onclick = function() {
-            game.init(difficulty[this.innerText.toUpperCase()])
+            game.init(difficulty[this.textContent.toUpperCase()])
         }
     }
     

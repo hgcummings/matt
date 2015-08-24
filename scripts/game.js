@@ -29,7 +29,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     gameOver.className = 'alert';                       
                     var result = document.getElementById('result');
                     gameOver.classList.add(resultClass);
-                    result.innerText = resultText;
+                    result.textContent = resultText;
                 }
                 
                 hintView.setText('Theseus is coming for you. Better run! Use arrow keys or W,A,S,D to move...');

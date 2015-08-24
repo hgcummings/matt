@@ -3,7 +3,7 @@ define(function() {
     
     return {
         setText: function(text) {
-            element.innerText = text;
+            element.textContent = text;
         }
     }
 });
