@@ -4,7 +4,7 @@ require.config({
     }
 });
 
-require(['game', 'models/difficulty'], function(game, difficulty) {
+require(['game', 'audio', 'models/difficulty'], function(game, audio, difficulty) {
     'use strict';
     
     var startButtons = document.getElementsByClassName('btn-start');
@@ -13,6 +13,13 @@ require(['game', 'models/difficulty'], function(game, difficulty) {
         button.onclick = function() {
             game.init(difficulty[this.innerText.toUpperCase()])
         }
+    }
+    
+    var audioButton = document.getElementById('volume');
+    audioButton.onclick = function() {
+        audioButton.classList.toggle('glyphicon-volume-off');
+        audioButton.classList.toggle('glyphicon-volume-up');
+        audio.toggle();
     }
     
     game.init(difficulty.TRICKSY);

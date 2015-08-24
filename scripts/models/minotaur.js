@@ -1,4 +1,4 @@
-define(['input', 'models/movement'], function(input, movement) {
+define(['input', 'models/movement', 'audio'], function(input, movement, audio) {
     'use strict';
     var movingTo = null;
 
@@ -19,8 +19,10 @@ define(['input', 'models/movement'], function(input, movement) {
                             [state.x, state.y], moveTo, 1 / difficulty.minotaurSpeed);
                         if (obstruction) {
                             environment.notifyAudible(obstruction.x, obstruction.y, difficulty.wallMoveVolume);
+                            audio.wall();
                         } else {
                             environment.notifyAudible(state.x, state.y, difficulty.footstepVolume);
+                            audio.step();
                         }
                         movingTo = moveTo;
                     }
