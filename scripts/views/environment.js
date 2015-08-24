@@ -35,6 +35,10 @@ define(['views/globals'], function(viewGlobals) {
             }
             
             model.soundSources.forEach(function(source) {
+                if (source.r < 0.5) {
+                    return;
+                }
+                
                 context.save();
                 context.globalAlpha = 1 - (source.r / source.v);
                 context.lineWidth = viewGlobals.scale / 8;

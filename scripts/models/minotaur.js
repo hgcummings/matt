@@ -12,7 +12,8 @@ define(['input', 'models/movement', 'audio'], function(input, movement, audio) {
                         movingTo = null;
                     }
                 } else if (input.getDirection() !== null) {
-                    var move = movement.directionVector(input.getDirection());
+                    state.d = input.getDirection();
+                    var move = movement.directionVector(state.d);
                     var moveTo = [state.x + move[0], state.y + move[1]];
                     if (grid.isValidPosition(moveTo)) {
                         var obstruction = grid.notifyPlayerMove(
@@ -32,7 +33,8 @@ define(['input', 'models/movement', 'audio'], function(input, movement, audio) {
             var state = {
                 update: update,
                 x: grid.width / 2,
-                y: grid.height / 2
+                y: grid.height / 2,
+                d: 0
             };
             
             environment.registerVisibleEntity('minotaur', state);
