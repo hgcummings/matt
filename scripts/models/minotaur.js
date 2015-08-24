@@ -1,9 +1,10 @@
 define(['input', 'models/movement', 'audio'], function(input, movement, audio) {
     'use strict';
-    var movingTo = null;
+    var movingTo;
 
     return {
         init: function(difficulty, grid, environment) {
+            movingTo = null;
             var update = function(dt) {
                 if (movingTo) {
                     state.x = movement.tween(state.x, movingTo[0], dt * difficulty.minotaurSpeed);

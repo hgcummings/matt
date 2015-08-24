@@ -1,14 +1,14 @@
 define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, movement, pathsModel, _) {
     'use strict';
-    var target = null;
-    var movingTo = null;
-    var obstructed = false;
-    
-    var paths;
-    var enemyP = []; // Confidence of the location of the enemy
+    var target, movingTo, obstructed, paths, enemyP;
     return {
         init: function(difficulty, grid, environment) {
+            target = null;
+            movingTo = null;
+            obstructed = false;
+            
             paths = pathsModel.init(difficulty, grid);
+            enemyP = []; // Confidence of the location of the enemy
             for (var i = 0; i < grid.width; ++i) {
                 enemyP[i] = [];
                 for (var j = 0; j < grid.width; ++j) {
