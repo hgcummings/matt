@@ -7,6 +7,12 @@ require.config({
 require(['game', 'audio', 'models/difficulty'], function(game, audio, difficulty) {
     'use strict';
     
+    var beginButton = document.getElementById('begin');
+    beginButton.onclick = function() {
+        document.getElementById('intro').remove();
+        game.init(difficulty.TRICKSY);
+    }
+    
     var startButtons = document.getElementsByClassName('btn-start');
     for (var i = 0; i < startButtons.length; ++i) {
         var button = startButtons[i];
@@ -22,5 +28,4 @@ require(['game', 'audio', 'models/difficulty'], function(game, audio, difficulty
         audio.toggle();
     }
     
-    game.init(difficulty.TRICKSY);
 });

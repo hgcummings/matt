@@ -21,18 +21,18 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                 var gameTime = new Date().getTime();
                 
                 var endGame = function(resultClass, resultText) {
-                    hintView.setText('');
+                    hintView.clear();
                     container.removeChild(canvas);
                     document.getElementById('menu').style.display = 'block';
                     
                     var gameOver = document.getElementById('gameOver');
-                    gameOver.className = 'alert';                       
+                    gameOver.className = 'alert';
                     var result = document.getElementById('result');
                     gameOver.classList.add(resultClass);
                     result.textContent = resultText;
                 }
                 
-                hintView.setText('Theseus is coming for you. Better run! Use arrow keys or W,A,S,D to move...');
+                hintView.setText('Theseus is coming for you. Better run! Use arrow keys or W,A,S,D to move...', 'warning');
                 var animate = function() {
                     var newTime = new Date().getTime();
                     var dt = newTime - gameTime;
@@ -49,7 +49,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                             endGame('alert-success', 'The hunter becomes the hunted. You defeated Theseus!');
                         }
                     } else if (theseus.light <= 0) {
-                        hintView.setText('Theseus is defenseless in the dark. Can you prevent him from escaping?');
+                        hintView.setText('Theseus is defenseless in the dark. Can you prevent him from escaping?', 'info');
                         if (theseus.x === environment.lightSources[0].x &&
                           theseus.y - 0.5 === environment.lightSources[0].y) {
                             endGame('alert-warning', 'You evaded Theseus, but he escaped to fight another day.')

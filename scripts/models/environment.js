@@ -109,7 +109,7 @@ define(['models/movement', 'models/geometry', 'views/hint'], function(movement, 
             };
             
             SoundListener.prototype.notify = function(sourceX, sourceY) {
-                hintView.setText("Be careful! If Theseus hears you it will help him track you down...")
+                hintView.setText('Be careful! If Theseus hears you it will help him track you down...', 'danger')
                 this.callback(sourceX, sourceY);
             };
             

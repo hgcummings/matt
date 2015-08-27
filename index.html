@@ -21,11 +21,22 @@
                 margin-left: 0.5em;
                 cursor: pointer;
             }
+            .alert {
+                width: 640px;
+                margin: auto;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <h1>Minotaur and the Theseus <span id="volume" class="glyphicon glyphicon-volume-up"></span></h1>
+            <div id="intro" class="jumbotron">
+                <p>You are the Minotaur, and Theseus is coming to find you and kill you.<br />
+                He's faster than you, but you know the Labyrinth intimately and can outwit him.</p>
+                <p>If you can evade him until his light burns out, then the tables turn<br />
+                and you have a chance to prevent him ever escaping the Labyrinth.<br /><br /></p>
+                <p><a class="btn btn-primary btn-lg" id="begin">Begin!</a></p>
+            </div>
             <div id="game"></div>
             <p id="hint"></p>
             <div id="menu" style="display: none">
