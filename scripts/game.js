@@ -42,7 +42,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     theseus.update(dt);
                     environment.update(dt);
                     
-                    if (theseus.x === minotaur.x && theseus.y === minotaur.y) {                        
+                    if (Math.abs(theseus.x - minotaur.x) + Math.abs(theseus.y - minotaur.y) < 0.25) {
                         if (theseus.light > 0) {
                             endGame('alert-danger', 'Theseus hunted you down and defeated you.');
                         } else {
