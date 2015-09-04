@@ -55,17 +55,17 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                           theseus.y - 0.5 === environment.lightSources[0].y) {
                             endGame('alert-warning', 'You evaded Theseus, but he escaped to fight another day.')
                         }
+                    } else {
+                        gridView.draw(context, grid);
+                        environmentView.draw(context, environment);
+                        minotaurView.draw(context, minotaur);
+                        theseusView.draw(context, theseus);
+                        
+                        hud.update();
+                        context.drawImage(hud.image, viewGlobals.scale * grid.width, 0);
+    
+                        window.requestAnimationFrame(animate);
                     }
-
-                    gridView.draw(context, grid);
-                    environmentView.draw(context, environment);
-                    minotaurView.draw(context, minotaur);
-                    theseusView.draw(context, theseus);
-                    
-                    hud.update();
-                    context.drawImage(hud.image, viewGlobals.scale * grid.width, 0);
-
-                    window.requestAnimationFrame(animate);
                 };
 
                 window.requestAnimationFrame(animate);
