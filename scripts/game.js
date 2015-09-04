@@ -1,7 +1,7 @@
 define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment',
-    'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals', 'views/hint'],
+    'views/grid', 'views/minotaur', 'views/theseus', 'views/environment', 'views/globals', 'views/hud', 'views/hint'],
     function(gridModel, minotaurModel, theseusModel, environmentModel,
-        gridView, minotaurView, theseusView, environmentView, viewGlobals, hintView) {
+        gridView, minotaurView, theseusView, environmentView, viewGlobals, hudView, hintView) {
         'use strict';
         return {
             init: function(difficulty) {
@@ -10,10 +10,11 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                 var grid = gridModel.init(difficulty, environment);
                 var minotaur = minotaurModel.init(difficulty, grid, environment);
                 var theseus = theseusModel.init(difficulty, grid, environment);
-
+                
+                var hud = hudView.init(grid, theseus);
                 var container = document.getElementById('game');
                 var canvas = document.createElement('canvas');
-                canvas.width = viewGlobals.scale * grid.width;
+                canvas.width = (viewGlobals.scale * grid.width) + hud.image.width;
                 canvas.height = viewGlobals.scale * grid.height;
                 var context = canvas.getContext('2d');
                 container.appendChild(canvas);
@@ -60,6 +61,9 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     environmentView.draw(context, environment);
                     minotaurView.draw(context, minotaur);
                     theseusView.draw(context, theseus);
+                    
+                    hud.update();
+                    context.drawImage(hud.image, viewGlobals.scale * grid.width, 0);
 
                     window.requestAnimationFrame(animate);
                 };

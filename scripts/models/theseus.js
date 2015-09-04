@@ -46,7 +46,7 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                 enemyP = newP;
             }
             
-            var resetEnemyProbabilities = function(x, y) {
+            var setKnownEnemyLocation = function(x, y) {
                 for (var i = 0; i < grid.width; ++i) {
                     for (var j = 0; j < grid.width; ++j) {
                         enemyP[i][j] = 0;
@@ -54,6 +54,7 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                 }
                 enemyP[Math.floor(x)][Math.floor(y)] = 1;
                 target = [Math.floor(x), Math.floor(y)];
+                state.lastAlert = new Date().getTime();
             }
             
             var clearEnemyProbability = function(x, y) {
@@ -62,7 +63,7 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                 }
             }
             
-            var soundListener = environment.createSoundListener(state.x, state.y, resetEnemyProbabilities);
+            var soundListener = environment.createSoundListener(state.x, state.y, setKnownEnemyLocation);
 
             var chooseNewTarget = function() {
                 if (state.light <= 0) {
@@ -114,7 +115,7 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                 }
                 
                 if (lightSource.visibleEntities.length) {
-                    resetEnemyProbabilities(lightSource.visibleEntities[0].x, lightSource.visibleEntities[0].y);
+                    setKnownEnemyLocation(lightSource.visibleEntities[0].x, lightSource.visibleEntities[0].y);
                 } else {
                     for (var i = 0; i < lightSource.lightCells.length; ++i) {
                         var cell = lightSource.lightCells[i];
