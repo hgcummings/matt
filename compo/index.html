@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Minotaur and the Theseus</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/darkly/bootstrap.min.css"/>
+        <script data-main="scripts/main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.min.js"></script>
+        <style>
+            body {
+                text-align: center;
+            }
+            p {
+                font-size: 1.2em;
+            }
+            #gameOver {
+                width: 50%;
+                margin: 5em auto;
+                padding-bottom: 2.5em;
+            }
+            #volume {
+                vertical-align: bottom;
+                margin-left: 0.5em;
+                cursor: pointer;
+            }
+            .alert {
+                width: 640px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Minotaur and the Theseus <span id="volume" class="glyphicon glyphicon-volume-up"></span></h1>
+            <div id="intro" class="jumbotron">
+                <p>You are the Minotaur, and Theseus is coming to find you and kill you.<br />
+                He's faster than you, but you know the Labyrinth intimately and can outwit him.</p>
+                <p>If you can evade him until his light burns out, then the tables turn<br />
+                and you have a chance to prevent him ever escaping the Labyrinth.<br /><br /></p>
+                <p><a class="btn btn-primary btn-lg" id="begin">Begin!</a></p>
+            </div>
+            <div id="game"></div>
+            <p id="hint"></p>
+            <div id="menu" style="display: none">
+                <div id="gameOver" class="alert">
+                    <h2>Game Over!</h2>
+                    <p id="result"></p>
+                </div>
+                <h3>Play again? Choose difficulty:</h3>
+                <p>
+                    <a class="btn btn-success btn-start">Easy</a>
+                    <a class="btn btn-info btn-start">Tricksy</a>
+                    <a class="btn btn-warning btn-start">Fiendish</a>
+                    <a class="btn btn-danger btn-start">Monstrous</a>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
