@@ -32,24 +32,24 @@ define(['models/movement', 'lodash'], function(movement, _) {
             var blockedCost = 1 / difficulty.theseusWallMoveSpeed;
             var unblockedCost = 1 /difficulty.theseusSpeed;
             
-            /*Expected cost is a bit complicated to calculate. Importantly though, it is *not* a weighted average
-              of the two numbers above, because there's usually a better option than powering through a solid wall.
-              A reasonable approximation is ('b' and 'u' referring to blocked and unblocked costs):
+            /*Expected cost is a bit complicated to calculate. Importantly though, it is *not* simply an average of the
+              two numbers above weighted by the maze density 'd', because there's usually a better option than powering
+              through a solid wall. The actual expected cost (with 'u' referring to cost of an unblocked step) is:
                 (u * probability of getting straight through) +
                 (3u * probability of getting around one side or the other) +
                 (5u * probability of making a five-step detour) +
                 (7u * probability of making a seven-step detour) +
-                (... and so on until the 'u' cost is greater than just paying 'b' and pushing straight through)
+                (... and so on until the cost is greater than stepping through a blocked wall, 'b')
                 (b * the remaining probability)
               For the middle terms, we are effectively walking around a wall with two possibilities for where
               the first segment is placed (to the left or right of the one in front of us) and three possibilties
               for each subsequent segment (carrying on straight, turning left or right), which gives:
-                   3u * 2(1-p)^3, 5u * 2*3(1-p)^5, 7u * 2*9(1-p)^7, etc...*/
+                   3u * 2(1-d)^3, 5u * 2*3(1-d)^5, 7u * 2*9(1-d)^7, etc...*/
             var cumulativeProbability = (1 - difficulty.mazeDensity);
             var expectedCost = unblockedCost * cumulativeProbability;
             for (var n = 3; n * unblockedCost < blockedCost; n += 2) {
-                var probability = 2 * Math.pow(1 - difficulty.mazeDensity, n);
-                expectedCost += Math.pow(3, ((n - 1) / 2) - 1) * unblockedCost * probability;
+                var probability = 2 * Math.pow(3, ((n - 1) / 2) - 1) * Math.pow(1 - difficulty.mazeDensity, n);
+                expectedCost += n * unblockedCost * probability;
                 cumulativeProbability += probability;
             }
             expectedCost += (1-cumulativeProbability) * blockedCost;

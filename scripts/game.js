@@ -20,6 +20,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                 container.appendChild(canvas);
 
                 var gameTime = new Date().getTime();
+                var gameInProgress = true;
                 
                 var endGame = function(resultClass, resultText) {
                     hintView.clear();
@@ -31,6 +32,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     var result = document.getElementById('result');
                     gameOver.classList.add(resultClass);
                     result.textContent = resultText;
+                    gameInProgress = false;
                 }
                 
                 hintView.setText('Theseus is coming for you. Better run! Use arrow keys or W,A,S,D to move...', 'warning');
@@ -55,7 +57,9 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                           theseus.y - 0.5 === environment.lightSources[0].y) {
                             endGame('alert-warning', 'You evaded Theseus, but he escaped to fight another day.')
                         }
-                    } else {
+                    }
+                    
+                    if (gameInProgress) {
                         gridView.draw(context, grid);
                         environmentView.draw(context, environment);
                         minotaurView.draw(context, minotaur);
