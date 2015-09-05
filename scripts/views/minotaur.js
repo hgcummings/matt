@@ -7,7 +7,7 @@ define(['views/globals'], function(viewGlobals) {
     sprite.width = u;
     sprite.height = u;
     var ctx = sprite.getContext('2d');
-    ctx.fillStyle = '#a52a2a';
+    ctx.fillStyle = '#a52a00';
 
     ctx.beginPath();
     ctx.moveTo(u / 2, u / 16);

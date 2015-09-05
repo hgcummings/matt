@@ -8,7 +8,7 @@ define(function() {
         },
         setText: function(text, level) {
             element.className = 'alert';
-            element.classList.add('alert-' + level);
+            element.classList.add(level);
             element.textContent = text;
         }
     }

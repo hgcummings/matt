@@ -25,6 +25,26 @@
                 width: 640px;
                 margin: auto;
             }
+            .success {
+                color: #fff;
+                background-color: hsl(110, 60%, 30%);
+                border-color: hsl(120, 60%, 30%);
+            }
+            .info {
+                color: #fff;
+                background-color: hsl(77, 67%, 35%);
+                border-color: hsl(77, 67%, 35%);
+            }
+            .warning {
+                color: #fff;
+                background-color: hsl(43, 73%, 40%);
+                border-color: hsl(43, 73%, 40%);
+            }
+            .danger {
+                color: #fff;
+                background-color: hsl(10, 80%, 45%);
+                border-color: hsl(10, 80%, 45%);
+            }
         </style>
     </head>
     <body>
@@ -35,7 +55,7 @@
                 He's faster than you, but you know the Labyrinth intimately and can outwit him.</p>
                 <p>If you can evade him until his light burns out, then the tables turn<br />
                 and you have a chance to prevent him ever escaping the Labyrinth.<br /><br /></p>
-                <p><a class="btn btn-primary btn-lg" id="begin">Begin!</a></p>
+                <p><a class="btn btn-default btn-lg" id="begin">Begin!</a></p>
             </div>
             <div id="game"></div>
             <p id="hint"></p>
@@ -46,10 +66,10 @@
                 </div>
                 <h3>Play again? Choose difficulty:</h3>
                 <p>
-                    <a class="btn btn-success btn-start">Easy</a>
-                    <a class="btn btn-info btn-start">Tricksy</a>
-                    <a class="btn btn-warning btn-start">Fiendish</a>
-                    <a class="btn btn-danger btn-start">Monstrous</a>
+                    <a class="btn success btn-start">Easy</a>
+                    <a class="btn info btn-start">Tricksy</a>
+                    <a class="btn warning btn-start">Fiendish</a>
+                    <a class="btn danger btn-start">Monstrous</a>
                 </p>
             </div>
         </div>

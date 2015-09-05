@@ -85,7 +85,7 @@ define(['models/movement', 'lodash'], function(movement, _) {
             }
             
             return {
-                moveTo: function(target, start) {
+                moveTowards: function(target, start) {
                     var cameFrom = {};
                     
                     var estimatedCost = function(fromPoint, toPoint) {

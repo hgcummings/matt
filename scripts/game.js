@@ -47,15 +47,15 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     
                     if (Math.abs(theseus.x - minotaur.x) + Math.abs(theseus.y - minotaur.y) < 0.25) {
                         if (theseus.light > 0) {
-                            endGame('alert-danger', 'Theseus hunted you down and defeated you.');
+                            endGame('danger', 'Theseus hunted you down and defeated you.');
                         } else {
-                            endGame('alert-success', 'The hunter becomes the hunted. You defeated Theseus!');
+                            endGame('success', 'The hunter becomes the hunted. You defeated Theseus!');
                         }
                     } else if (theseus.light <= 0) {
                         hintView.setText('Theseus is defenseless in the dark. Can you prevent him from escaping?', 'info');
                         if (theseus.x === environment.lightSources[0].x &&
                           theseus.y - 0.5 === environment.lightSources[0].y) {
-                            endGame('alert-warning', 'You evaded Theseus, but he escaped to fight another day.')
+                            endGame('warning', 'You evaded Theseus, but he escaped to fight another day.')
                         }
                     }
                     

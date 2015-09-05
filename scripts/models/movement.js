@@ -11,6 +11,21 @@ define(function() {
                 return Math.max(a - delta, b);
             }
         },
+        directionFromVector: function(vector) {
+            // Assumes vector is aligned with the grid axes
+            if (vector[1] < 0) {
+                return 0;
+            }
+            if (vector[0] > 0) {
+                return 1;
+            }
+            if (vector[1] > 0) {
+                return 2;
+            }
+            if (vector[0] < 0) {
+                return 3;
+            }
+        },
         directionVector: function(direction) {
             var ret = [0,0];
             switch (direction) {

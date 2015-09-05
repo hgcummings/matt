@@ -20,6 +20,7 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
             var state = {
                 x: grid.width / 2,
                 y: 0.5,
+                d: 2,
                 light: difficulty.theseusLight
             };
             var lightSource = environment.createLightSource(state.x, state.y);
@@ -132,10 +133,12 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                     if (!target) {
                         target = chooseNewTarget();
                     }
-                    movingTo = paths.moveTo(target, [state.x, state.y]);
+                    movingTo = paths.moveTowards(target, [state.x, state.y]);
                     if (movingTo) {
                         obstructed = !!grid.notifyPlayerMove(
                             [state.x, state.y], movingTo, 1 / difficulty.theseusWallMoveSpeed);
+                        state.d = movement.directionFromVector(
+                            [movingTo[0] - state.x], [movingTo[1] - state.y]);
                     }
                 }
                 
