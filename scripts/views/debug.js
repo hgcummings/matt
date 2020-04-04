@@ -42,7 +42,7 @@ define(['views/globals'], function(viewGlobals) {
                     context.strokeStyle = '#fff'
                     context.beginPath();
                     context.moveTo((start[0] + 0.5) * viewGlobals.scale, (start[1] + 0.5) * viewGlobals.scale);
-                    context.lineTo((end[0] + 0.5) * viewGlobals.scale, (end[0] + 0.5) * viewGlobals.scale);
+                    context.lineTo((end[0] + 0.5) * viewGlobals.scale, (end[1] + 0.5) * viewGlobals.scale);
                     context.stroke();
                     context.closePath();
                     context.restore();
@@ -60,21 +60,19 @@ define(['views/globals'], function(viewGlobals) {
                 
                 if (max > 0) {
                     for (var i = 0; i < window.DEBUG_PROBABILITIES.length; ++i) {
-                    for (var j = 0; j < window.DEBUG_PROBABILITIES[i].length; ++j) {
-                        context.save();
-                        context.globalAlpha = Math.min(1, window.DEBUG_PROBABILITIES[i][j] / max);
-                        context.fillStyle = '#a52a2a';
-                        context.fillRect(
-                            i * viewGlobals.scale,
-                            j * viewGlobals.scale,
-                            viewGlobals.scale,
-                            viewGlobals.scale);
-                        context.restore();
+                        for (var j = 0; j < window.DEBUG_PROBABILITIES[i].length; ++j) {
+                            context.save();
+                            context.globalAlpha = Math.min(1, window.DEBUG_PROBABILITIES[i][j] / max);
+                            context.fillStyle = '#a52a2a';
+                            context.fillRect(
+                                i * viewGlobals.scale,
+                                j * viewGlobals.scale,
+                                viewGlobals.scale,
+                                viewGlobals.scale);
+                            context.restore();
+                        }
                     }
                 }
-                }
-                
-                
             }
         }
     };
