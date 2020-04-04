@@ -1,4 +1,6 @@
 define(function() {
+    'use strict';
+
     var element = document.getElementById('hint');
     
     return {
@@ -11,5 +13,5 @@ define(function() {
             element.classList.add(level);
             element.textContent = text;
         }
-    }
+    };
 });

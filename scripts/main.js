@@ -11,14 +11,15 @@ require(['game', 'audio', 'models/difficulty'], function(game, audio, difficulty
     beginButton.onclick = function() {
         document.getElementById('intro').remove();
         game.init(difficulty.TRICKSY);
-    }
+    };
     
     var startButtons = document.getElementsByClassName('btn-start');
+    var startGame = function() {
+        game.init(difficulty[this.textContent.toUpperCase()]);
+    };
     for (var i = 0; i < startButtons.length; ++i) {
         var button = startButtons[i];
-        button.onclick = function() {
-            game.init(difficulty[this.textContent.toUpperCase()])
-        }
+        button.onclick = startGame;
     }
     
     var audioButton = document.getElementById('volume');
@@ -26,6 +27,6 @@ require(['game', 'audio', 'models/difficulty'], function(game, audio, difficulty
         audioButton.classList.toggle('glyphicon-volume-off');
         audioButton.classList.toggle('glyphicon-volume-up');
         audio.toggle();
-    }
+    };
     
 });

@@ -45,7 +45,7 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                     window.DEBUG_PROBABILITIES = newP;
                 }
                 enemyP = newP;
-            }
+            };
             
             var setKnownEnemyLocation = function(x, y) {
                 for (var i = 0; i < grid.width; ++i) {
@@ -56,13 +56,13 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                 enemyP[Math.floor(x)][Math.floor(y)] = 1;
                 target = [Math.floor(x), Math.floor(y)];
                 state.lastAlert = new Date().getTime();
-            }
+            };
             
             var clearEnemyProbability = function(x, y) {
                 if (grid.isValidPosition([x, y])) {
                     enemyP[Math.floor(x)][Math.floor(y)] = 0;
                 }
-            }
+            };
             
             var soundListener = environment.createSoundListener(state.x, state.y, setKnownEnemyLocation);
 
@@ -92,7 +92,7 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                 } else {
                     return _.sample(maxTargets);
                 }
-            }
+            };
             
             var timeSinceLastLocated = 0;
             

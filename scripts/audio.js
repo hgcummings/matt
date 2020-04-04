@@ -1,4 +1,7 @@
+/* global Audio */
 define(function() {
+    'use strict';
+
     var enabled = true;
     
     var stepSound = new Audio('audio/step.wav');
@@ -9,8 +12,8 @@ define(function() {
             if (enabled) {
                 sound.play();
             }
-        }
-    }
+        };
+    };
     
     return {
         toggle: function() {
@@ -18,5 +21,5 @@ define(function() {
         },
         wall: wrap(wallSound),
         step: wrap(stepSound)
-    }
-})
+    };
+});

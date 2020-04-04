@@ -1,14 +1,15 @@
-/* global WE */
-define(['models/movement', 'lodash'], function(movement, _) {    
+define(['models/movement', 'lodash'], function(movement, _) {   
+    'use strict';
+    
     var costs = {
         NS: [],
         WE: []
-    }
+    };
     var decay = 0.00005;
         
     var constrainToGrid = function(point) {
         return [Math.floor(point[0]), Math.floor(point[1])];
-    }
+    };
     
     var normalisePath = function(path) {
         var orientation = path[0][0] === path[1][0] ? 'NS' : 'WE';
@@ -17,14 +18,14 @@ define(['models/movement', 'lodash'], function(movement, _) {
             return {
                 start: constrainToGrid(path[1]),
                 orientation: orientation
-            }
+            };
         } else {
             return {
                 start: constrainToGrid(path[0]),
                 orientation: orientation
-            }
+            };
         }
-    }
+    };
     
     return {
         init: function(difficulty, grid) {
@@ -58,7 +59,7 @@ define(['models/movement', 'lodash'], function(movement, _) {
                 return grid.isValidPosition(path.start) && grid.isValidPosition([
                     path.orientation === 'WE' ? path.start[0] + 1 : path.start[0],
                     path.orientation === 'NS' ? path.start[1] + 1 : path.start[1]
-                ])
+                ]);
             }
             
             for (var i = 0; i < grid.width; ++i) {
@@ -76,13 +77,13 @@ define(['models/movement', 'lodash'], function(movement, _) {
     
             var lookupCost = function (path) {
                 return costs[path.orientation][path.start[0]][path.start[1]];
-            }
+            };
     
             var updatedCost = function(path, value) {
                 if (isInGrid(path)) {
                     costs[path.orientation][path.start[0]][path.start[1]] = value;
                 }
-            }
+            };
             
             return {
                 moveTowards: function(target, start) {
@@ -91,7 +92,7 @@ define(['models/movement', 'lodash'], function(movement, _) {
                     var estimatedCost = function(fromPoint, toPoint) {
                         var steps = Math.abs(fromPoint[0] - toPoint[0]) + Math.abs(fromPoint[1] - toPoint[1]);
                         return unblockedCost * steps;
-                    }
+                    };
                     
                     var reconstructPath = function(current) {
                         var totalPath = [current];
@@ -109,13 +110,13 @@ define(['models/movement', 'lodash'], function(movement, _) {
                         } else {
                             return null;
                         }
-                    }
+                    };
                     
                     var contains = function(collection, point) {
                         return _.any(collection, function(candidate) {
                             return candidate[0] === point[0] && candidate[1] === point[1];
                         });
-                    }
+                    };
                     
                     start = constrainToGrid(start);
                     var closed = [];
@@ -124,18 +125,18 @@ define(['models/movement', 'lodash'], function(movement, _) {
                     
                     var setScore = function(point, score, value) {
                         scores[score][point.toString()] = value;
-                    }
+                    };
                     
                     var getScore = function(point, score) {
                         if (scores[score].hasOwnProperty(point.toString())) {
                             return scores[score][point.toString()];
                         }
                         return Infinity;
-                    }
+                    };
                     
                     var getFScore = function(point) {
                         return getScore(point, 'f');
-                    }
+                    };
                     
                     setScore(start, 'g', 0);
                     setScore(start, 'f', estimatedCost(start, target));
@@ -144,7 +145,7 @@ define(['models/movement', 'lodash'], function(movement, _) {
                         var current = _.min(open, getFScore);
                         
                         if (_.eq(current, target)) {
-                            return reconstructPath(target)
+                            return reconstructPath(target);
                         }
                         
                         open.splice(open.indexOf(current), 1);
@@ -195,8 +196,8 @@ define(['models/movement', 'lodash'], function(movement, _) {
                         delete window.DEBUG_PATH_COSTS;
                     }
                 }
-            }
+            };
         }
-    }
+    };
     
-})
+});

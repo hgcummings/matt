@@ -68,7 +68,7 @@ define(['models/movement', 'models/geometry', 'views/hint'], function(movement, 
                 if (index !== -1) {
                     state.lightSources.splice(index, 1);
                 }
-            }
+            };
             
             var speedOfSound = 0.01; // Squares per millisecond
             
@@ -109,7 +109,7 @@ define(['models/movement', 'models/geometry', 'views/hint'], function(movement, 
             };
             
             SoundListener.prototype.notify = function(sourceX, sourceY) {
-                hintView.setText('Be careful! If Theseus hears you it will help him track you down...', 'danger')
+                hintView.setText('Be careful! If Theseus hears you it will help him track you down...', 'danger');
                 this.callback(sourceX, sourceY);
             };
             

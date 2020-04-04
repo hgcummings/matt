@@ -33,7 +33,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
                     gameOver.classList.add(resultClass);
                     result.textContent = resultText;
                     gameInProgress = false;
-                }
+                };
                 
                 hintView.setText('Theseus is coming for you. Better run! Use arrow keys or W,A,S,D to move...', 'warning');
                 var animate = function() {
@@ -69,7 +69,7 @@ define(['models/grid', 'models/minotaur', 'models/theseus', 'models/environment'
 
                         if (theseus.x === environment.lightSources[0].x &&
                           theseus.y - 0.5 === environment.lightSources[0].y) {
-                            endGame('warning', 'You evaded Theseus, but he escaped to fight another day.')
+                            endGame('warning', 'You evaded Theseus, but he escaped to fight another day.');
                         }
                     }
                     
