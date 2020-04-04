@@ -54,7 +54,9 @@ define(['input', 'models/movement', 'models/paths', 'lodash'], function(input, m
                     }
                 }
                 enemyP[Math.floor(x)][Math.floor(y)] = 1;
-                target = [Math.floor(x), Math.floor(y)];
+                if (state.light > 0) {
+                    target = [Math.floor(x), Math.floor(y)];
+                }
                 state.lastAlert = new Date().getTime();
             };
             
