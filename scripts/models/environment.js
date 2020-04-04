@@ -56,7 +56,7 @@ define(['models/movement', 'models/geometry', 'views/hint'], function(movement, 
             LightSource.prototype.illuminatesPosition = function(x, y) {
                 for (var i = 0; i < this.lightCells.length; ++i) {
                     var cell = this.lightCells[i];
-                    if (cell.x - 0.5 < x && x < cell.x + 0.5 && cell.y - 0.5 < y && y < cell.y + 0.5) {
+                    if (cell.x - 0.5 <= x && x <= cell.x + 0.5 && cell.y - 0.5 <= y && y <= cell.y + 0.5) {
                         return true;
                     }
                 }
